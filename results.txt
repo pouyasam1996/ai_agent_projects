@@ -1,0 +1,79 @@
+```latex
+\textbf{Problem Analysis}
+
+The problem is a coding problem titled "Add Two Numbers." It involves adding two numbers represented by linked lists. Each node contains a single digit, and the digits are stored in reverse order. The task is to add the two numbers and return the sum as a linked list.
+
+\textbf{Solution 1 (Common Approach)}
+
+\textit{Language: Python}
+
+\begin{verbatim}
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def addTwoNumbers(l1, l2):
+    dummy = ListNode()
+    current = dummy
+    carry = 0
+
+    while l1 or l2 or carry:
+        val1 = l1.val if l1 else 0
+        val2 = l2.val if l2 else 0
+        total = val1 + val2 + carry
+        carry = total // 10
+        current.next = ListNode(total % 10)
+        current = current.next
+
+        if l1:
+            l1 = l1.next
+        if l2:
+            l2 = l2.next
+
+    return dummy.next
+\end{verbatim}
+
+\textbf{Solution 2 (Alternative Approach)}
+
+\textit{Language: Python}
+
+\begin{verbatim}
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def addTwoNumbers(l1, l2):
+    stack1, stack2 = [], []
+
+    while l1:
+        stack1.append(l1.val)
+        l1 = l1.next
+    while l2:
+        stack2.append(l2.val)
+        l2 = l2.next
+
+    carry = 0
+    prev = None
+
+    while stack1 or stack2 or carry:
+        val1 = stack1.pop() if stack1 else 0
+        val2 = stack2.pop() if stack2 else 0
+        total = val1 + val2 + carry
+        carry = total // 10
+        current = ListNode(total % 10)
+        current.next = prev
+        prev = current
+
+    return prev
+\end{verbatim}
+
+\textbf{Explanations}
+
+\begin{itemize}
+    \item \textbf{Solution 1:} This approach uses a dummy node to simplify handling the head of the result list. It iterates through both linked lists, adding corresponding digits and managing the carry. The time complexity is \(O(\max(n, m))\), where \(n\) and \(m\) are the lengths of the two lists. The space complexity is \(O(\max(n, m))\) due to the result list.
+
+    \item \textbf{Solution 2:} This approach uses stacks to reverse the order of the digits, allowing addition from the least significant digit. It constructs the result list in reverse order and then reverses it at the end. The time complexity is \(O(n + m)\), and the space complexity is \(O(n + m)\) due to the stacks.
+\end{itemize}
+```
