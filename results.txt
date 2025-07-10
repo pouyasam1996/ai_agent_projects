@@ -1,79 +1,56 @@
 ```latex
-\textbf{Problem Analysis}
+\textbf{Type of Content:} \\
+Coding problem (algorithm, data structure, debugging, etc.)
 
-The problem is a coding problem titled "Add Two Numbers." It involves adding two numbers represented by linked lists. Each node contains a single digit, and the digits are stored in reverse order. The task is to add the two numbers and return the sum as a linked list.
+\textbf{1. PROBLEM ANALYSIS} \\
+The problem is asking to determine the maximum profit that can be achieved from a list of stock prices by choosing a single day to buy and a different day in the future to sell. The goal is to find the maximum difference between a pair of prices where the selling price comes after the buying price.
 
-\textbf{Solution 1 (Common Approach)}
+\textbf{2. SOLUTION DESCRIPTION (Common Approach)} \\
+A common approach to solve this problem is to use a single pass algorithm that keeps track of the minimum price encountered so far and calculates the potential profit at each step. This approach is efficient because it only requires one traversal of the list, making it optimal for time complexity.
 
-\textit{Language: Python}
-
+\textbf{3. SOLUTION 1 (Common Approach)} \\
 \begin{verbatim}
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
-
-def addTwoNumbers(l1, l2):
-    dummy = ListNode()
-    current = dummy
-    carry = 0
-
-    while l1 or l2 or carry:
-        val1 = l1.val if l1 else 0
-        val2 = l2.val if l2 else 0
-        total = val1 + val2 + carry
-        carry = total // 10
-        current.next = ListNode(total % 10)
-        current = current.next
-
-        if l1:
-            l1 = l1.next
-        if l2:
-            l2 = l2.next
-
-    return dummy.next
+def maxProfit(prices):
+    min_price = float('inf')
+    max_profit = 0
+    
+    for price in prices:
+        # Update the minimum price if the current price is lower
+        if price < min_price:
+            min_price = price
+        # Calculate the profit if selling at the current price
+        elif price - min_price > max_profit:
+            max_profit = price - min_price
+    
+    return max_profit
 \end{verbatim}
 
-\textbf{Solution 2 (Alternative Approach)}
+\textbf{4. SOLUTION DESCRIPTION (Alternative Approach)} \\
+An alternative approach is to use a brute force method where every possible pair of buy and sell days is considered. This approach is less efficient but straightforward, as it checks all combinations to find the maximum profit.
 
-\textit{Language: Python}
-
+\textbf{5. SOLUTION 2 (Alternative Approach)} \\
 \begin{verbatim}
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
-
-def addTwoNumbers(l1, l2):
-    stack1, stack2 = [], []
-
-    while l1:
-        stack1.append(l1.val)
-        l1 = l1.next
-    while l2:
-        stack2.append(l2.val)
-        l2 = l2.next
-
-    carry = 0
-    prev = None
-
-    while stack1 or stack2 or carry:
-        val1 = stack1.pop() if stack1 else 0
-        val2 = stack2.pop() if stack2 else 0
-        total = val1 + val2 + carry
-        carry = total // 10
-        current = ListNode(total % 10)
-        current.next = prev
-        prev = current
-
-    return prev
+def maxProfitBruteForce(prices):
+    max_profit = 0
+    n = len(prices)
+    
+    for i in range(n):
+        for j in range(i + 1, n):
+            # Calculate the profit for each pair
+            profit = prices[j] - prices[i]
+            # Update the maximum profit
+            if profit > max_profit:
+                max_profit = profit
+    
+    return max_profit
 \end{verbatim}
 
-\textbf{Explanations}
+\textbf{6. EXPLANATIONS} \\
+\textbf{Solution 1 Explanation:} \\
+The first solution iterates through the list of prices while maintaining the minimum price seen so far. For each price, it calculates the potential profit by subtracting the minimum price from the current price. If this profit is greater than the current maximum profit, it updates the maximum profit. This solution has a time complexity of \(O(n)\) and a space complexity of \(O(1)\).
 
-\begin{itemize}
-    \item \textbf{Solution 1:} This approach uses a dummy node to simplify handling the head of the result list. It iterates through both linked lists, adding corresponding digits and managing the carry. The time complexity is \(O(\max(n, m))\), where \(n\) and \(m\) are the lengths of the two lists. The space complexity is \(O(\max(n, m))\) due to the result list.
+\textbf{Solution 2 Explanation:} \\
+The second solution uses a nested loop to consider every possible pair of buy and sell days. It calculates the profit for each pair and updates the maximum profit if the current profit is greater. This solution has a time complexity of \(O(n^2)\) and a space complexity of \(O(1)\). It is less efficient but demonstrates a straightforward approach to solving the problem.
 
-    \item \textbf{Solution 2:} This approach uses stacks to reverse the order of the digits, allowing addition from the least significant digit. It constructs the result list in reverse order and then reverses it at the end. The time complexity is \(O(n + m)\), and the space complexity is \(O(n + m)\) due to the stacks.
-\end{itemize}
+Both solutions aim to find the maximum profit, but the first solution is more efficient and suitable for larger datasets.
 ```

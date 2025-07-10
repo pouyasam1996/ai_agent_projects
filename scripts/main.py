@@ -3,8 +3,8 @@ from pynput import keyboard
 import pyautogui
 import os
 import time
-from ai_agent import process_screenshot
 from web_server import start_server
+import subprocess
 
 def capture_screenshot():
     pressed = set()
@@ -22,13 +22,8 @@ def capture_screenshot():
                 screenshot.save(screenshot_path)
                 if os.path.exists(screenshot_path):
                     print(f"Screenshot saved: {screenshot_path}")
-                    # Call AI agent
-                    result = process_screenshot(screenshot_path)
-                    print("AI Result:", result)
-                    # Save result to file
-                    with open("/Users/pouyasamandi/Desktop/Agent_projects/interview_ai/results.txt", "w") as f:
-                        f.write(result)
-                return False  # Stop listener after capture
+                    # Wait for Ctrl+Shift+C or Ctrl+Shift+P
+                    return wait_for_choice(screenshot_path)
         except Exception as e:
             print(f"Error: {e}")
         return True
@@ -38,6 +33,40 @@ def capture_screenshot():
             pressed.discard(key)
         except Exception:
             pass
+
+    def wait_for_choice(screenshot_path):
+        print("Press Ctrl+Shift+C for C++ or Ctrl+Shift+P for Python...")
+        choice_made = [False]  # Mutable flag to track choice
+
+        def on_choice_press(key):
+            try:
+                pressed.add(key)
+                if (keyboard.Key.ctrl in pressed and
+                    keyboard.Key.shift in pressed):
+                    if keyboard.KeyCode.from_char('c') in pressed:
+                        print("Running ai_agent_cpp.py...")
+                        subprocess.run(["python", "ai_agent_cpp.py", screenshot_path])
+                        choice_made[0] = True
+                        return False  # Stop listener
+                    elif keyboard.KeyCode.from_char('p') in pressed:
+                        print("Running ai_agent_python_gpt.py...")
+                        subprocess.run(["python", "ai_agent_python_gpt.py", screenshot_path])
+                        choice_made[0] = True
+                        return False  # Stop listener
+            except Exception as e:
+                print(f"Choice error: {e}")
+            return True
+
+        def on_choice_release(key):
+            try:
+                pressed.discard(key)
+            except Exception:
+                pass
+
+        with keyboard.Listener(on_press=on_choice_press, on_release=on_choice_release) as choice_listener:
+            choice_listener.join()
+
+        return False  # Stop main listener after choice
 
     with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
         listener.join()
