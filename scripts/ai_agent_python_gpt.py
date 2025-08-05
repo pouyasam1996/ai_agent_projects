@@ -69,7 +69,7 @@ def process_screenshot(screenshot_path):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4.1",
             messages=[
                 {
                     "role": "user",

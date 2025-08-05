@@ -23,7 +23,7 @@ def process_screenshot(screenshot_path):
     except Exception as e:
         return f"Image processing error: {e}"
 
-    # Prompt for C++ code output
+    # Prompt for CPP code output
     prompt = """
     Analyze the screenshot carefully and provide a well-structured response.
 
@@ -37,10 +37,10 @@ def process_screenshot(screenshot_path):
     Brief description of what the problem is asking for.
 
     2. SOLUTION DESCRIPTION (Common Approach)
-    Provide an overview of the approach of solving the problem in top level and why it's a common approach. 
+    Provide an overview of the approach of solving the problem in top level and why it's a common approach.
 
     3. SOLUTION 1 (Common Approach)
-    Provide clean, easy for imlementation C++ code with proper indentation.
+    Provide clean, well-commented C++ code with proper indentation.
 
     4. SOLUTION DESCRIPTION (Alternative Approach)
     Provide an overview of the approach of solving the problem in top level and why it's a alternative approach. 
@@ -70,7 +70,7 @@ def process_screenshot(screenshot_path):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4.1",
             messages=[
                 {
                     "role": "user",

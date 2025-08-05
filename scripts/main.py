@@ -44,8 +44,8 @@ def capture_screenshot():
                 if (keyboard.Key.ctrl in pressed and
                     keyboard.Key.shift in pressed):
                     if keyboard.KeyCode.from_char('c') in pressed:
-                        print("Running ai_agent_cpp.py...")
-                        subprocess.run(["python", "ai_agent_cpp.py", screenshot_path])
+                        print("Running ai_agent_cpp_gpt.py...")
+                        subprocess.run(["python", "ai_agent_cpp_gpt.py", screenshot_path])
                         choice_made[0] = True
                         return False  # Stop listener
                     elif keyboard.KeyCode.from_char('p') in pressed:

@@ -4,7 +4,7 @@ import io
 from PIL import Image
 
 API_KEY = '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'
-
+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
 
 def process_screenshot(screenshot_path):
     """Process screenshot and get AI analysis"""
