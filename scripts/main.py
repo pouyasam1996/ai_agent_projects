@@ -5,6 +5,7 @@ import os
 import time
 from web_server import start_server
 import subprocess
+import numpy as np
 
 def capture_screenshot():
     pressed = set()
