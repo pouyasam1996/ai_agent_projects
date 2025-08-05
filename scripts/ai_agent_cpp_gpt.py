@@ -92,7 +92,7 @@ def process_screenshot(screenshot_path):
 
         result = response.choices[0].message.content
         # Save result to file
-        with open("/Users/pouyasamandi/Desktop/Agent_projects/interview_ai/results.txt", "w") as f:
+        with open("./results.txt", "w") as f:
             f.write(result)
         return result
 

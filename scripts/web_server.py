@@ -1,13 +1,19 @@
-# /Users/pouyasamandi/Desktop/Agent_projects/interview_ai/scripts/web_server.py
+# /Users/pouyasamandi/Desktop/Agent_projects/screen_solver_ai/scripts/web_server.py
 from flask import Flask, render_template
 import threading
 import os
 import re
 import logging
+
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)  # Suppress all but ERROR logs
-app = Flask(__name__, template_folder="/Users/pouyasamandi/Desktop/Agent_projects/interview_ai/templates")
 
+# Get the project root directory (parent of scripts directory)
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATES_DIR = os.path.join(PROJECT_ROOT, "templates")
+RESULTS_FILE = os.path.join(PROJECT_ROOT, "results.txt")
+
+app = Flask(__name__, template_folder=TEMPLATES_DIR)
 
 def process_latex_content(content):
     """Process content to identify and format LaTeX sections"""
@@ -54,7 +60,6 @@ def process_latex_content(content):
 
     return sections
 
-
 def extract_code_blocks(latex_content):
     """Extract code blocks from LaTeX content"""
     # Pattern to match \begin{verbatim} ... \end{verbatim}
@@ -72,7 +77,6 @@ def extract_code_blocks(latex_content):
         code_blocks.append(match.group(1))
 
     return code_blocks
-
 
 def format_latex_for_display(latex_content):
     """Format LaTeX content for better web display"""
@@ -160,14 +164,13 @@ def format_latex_for_display(latex_content):
 
     return formatted
 
-
 @app.route('/')
 def index():
     try:
-        with open("/Users/pouyasamandi/Desktop/Agent_projects/interview_ai/results.txt", "r") as f:
+        with open(RESULTS_FILE, "r") as f:
             content = f.read()
     except FileNotFoundError:
-        content = "No results yet."
+        content = "No results yet. Take a screenshot with Cmd+Shift+7 and choose Python or C++!"
 
     # Process the content to identify LaTeX sections
     sections = process_latex_content(content)
@@ -180,10 +183,12 @@ def index():
 
     return render_template('index.html', sections=sections)
 
-
 def start_server():
     # Start Flask in a separate thread
     def run():
+        print(f"🌐 Web server starting...")
+        print(f"📁 Templates directory: {TEMPLATES_DIR}")
+        print(f"📄 Results file: {RESULTS_FILE}")
         app.run(host='0.0.0.0', port=5001, debug=False, use_reloader=False)
 
     thread = threading.Thread(target=run)

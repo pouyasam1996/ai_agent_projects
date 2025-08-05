@@ -3,8 +3,10 @@ import base64
 import io
 from PIL import Image
 import sys
+import os
 
 API_KEY = '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'
+
 
 def process_screenshot(screenshot_path):
     """Process screenshot and get AI analysis for Python output"""
@@ -34,13 +36,13 @@ def process_screenshot(screenshot_path):
     If it's a coding problem, provide:
     1. PROBLEM ANALYSIS
     Brief description of what the problem is asking for.
-    
+
     2. SOLUTION DESCRIPTION (Common Approach)
     Provide an overview of the approach of solving the problem in top level and why it's a common approach.
 
     3. SOLUTION 1 (Common Approach)
     Provide clean, well-commented Python code with proper indentation.
-    
+
     4. SOLUTION DESCRIPTION (Alternative Approach)
     Provide an overview of the approach of solving the problem in top level and why it's a alternative approach. 
 
@@ -90,13 +92,15 @@ def process_screenshot(screenshot_path):
         )
 
         result = response.choices[0].message.content
-        # Save result to file
-        with open("/Users/pouyasamandi/Desktop/Agent_projects/interview_ai/results.txt", "w") as f:
+        # Save result to file - FIXED: Use relative path that works from project root
+        results_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "results.txt")
+        with open(results_path, "w") as f:
             f.write(result)
         return result
 
     except Exception as e:
         return f"AI processing error: {e}"
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
